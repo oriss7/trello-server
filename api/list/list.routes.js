@@ -6,6 +6,6 @@ module.exports.connectListRoutes = (app) => {
     app.get(`/${endPoint}/query/:boardId`, listController.query)
     
     // app.get(`/${endPoint}/:id`, listController.get)
-    // app.put(`/${endPoint}/:id`, listController.update)
+    app.put(`/${endPoint}/:id`, listController.update)
     // app.delete(`/${endPoint}/:id`, listController.remove)
 }

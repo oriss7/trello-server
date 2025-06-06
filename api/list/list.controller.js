@@ -2,9 +2,9 @@ const listService = require('./list.service.js');
 
 module.exports = {
     create,
-    query
+    query,
+    update
     // get,
-    // update,
     // remove,
 }
 
@@ -30,5 +30,22 @@ async function query(req, res) {
     } catch (error) {
         const status = error.status || 500
         return res.status(status).json({ message: error.message || 'Lists not found' })
+    }
+}
+
+async function update(req, res) {
+    try {
+        const { id } = req.params
+        const { title } = req.body
+        const updateData = {};
+        if (title !== undefined) updateData.title = title;
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({ message: 'No update data provided' });
+        }
+        const updatedList = await listService.update(id, updateData)
+        return res.json({ updatedList })
+    } catch (error) {
+        const status = error.status || 500
+        res.status(status).json({ message: error.message || 'Failed to update list' });
     }
 }

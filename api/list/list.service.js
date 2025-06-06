@@ -3,9 +3,9 @@ const { ListModel } = require('./list.model');
 
 module.exports = {
     create,
-    query
+    query,
+    update
     // get,
-    // update
     // remove,
 }
 
@@ -29,4 +29,9 @@ async function query(boardId) {
         throw Object.assign(new Error('No lists found'), { status: 404 })
     }
     return lists
+}
+
+async function update(listId, updateData) {
+    const updatedList = await dbService.updateById(ListModel, listId, updateData)
+    return updatedList
 }
