@@ -8,13 +8,15 @@ module.exports = {
     // get,
     // remove,
 }
-
+// const position = await ListModel.countDocuments({ board });
 async function create(board, title) {
-    const list = await dbService.create(ListModel, { board, title })
+    const position = await dbService.countDocuments(ListModel, { board })
+    const list = await dbService.create(ListModel, { board, title, position })
     await dbService.save(list);
     return {
         _id: list._id,
-        title: list.title
+        title: list.title,
+        position: list.position
     }
 }
 
@@ -24,7 +26,7 @@ async function create(board, title) {
 // }
 async function query(boardId) {
     const lists = await dbService.findByFieldSorted(ListModel,
-        'board', boardId, 'board title', { createdAt: 1 })
+        'board', boardId, 'board title  position', { createdAt: 1 })
     if (!lists || lists.length === 0) {
         throw Object.assign(new Error('No lists found'), { status: 404 })
     }

@@ -5,11 +5,11 @@ const model = mongoose.model
 const cardSchema = new Schema({
   list: { type: Schema.Types.ObjectId, ref: 'List', required: true },
   title: { type: String, required: true },
-  complete: { type: Boolean, default: false }  // <-- New field
+  position: { type: Number, required: true },
+  complete: { type: Boolean, default: false }
 
   // board: { type: Schema.Types.ObjectId, ref: 'Board', required: true },
   // description: String,
-  // position: { type: Number, required: true },
   // labels: [{ type: String }],
   // dueDate: Date,
   // assignedTo: [{ type: Schema.Types.ObjectId, ref: 'Account' }]

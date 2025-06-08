@@ -11,6 +11,7 @@ module.exports = {
   findOne,
   updateById,
   findByFieldSorted,
+  countDocuments
 }
 
 async function connectDB() {
@@ -49,4 +50,9 @@ async function findByFieldSorted(model, fieldName, fieldValue, projection = '', 
   return await model
     .find({ [fieldName]: fieldValue }, projection)
     .sort(sortBy)
+}
+
+async function countDocuments(model, filter) {
+  const count = await model.countDocuments(filter)
+  return count
 }

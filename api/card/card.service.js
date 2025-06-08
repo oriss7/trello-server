@@ -10,11 +10,13 @@ module.exports = {
 }
 
 async function create(list, title) {
-    const card = await dbService.create(CardModel, { list, title })
+    const position = await dbService.countDocuments(CardModel, { list })
+    const card = await dbService.create(CardModel, { list, title, position })
     await dbService.save(card);
     return {
         _id: card._id,
-        title: card.title
+        title: card.title,
+        position: card.position
     }
 }
 // async function get(boardId) {
@@ -23,7 +25,7 @@ async function create(list, title) {
 // }
 async function query(listId) {
     const cards = await dbService.findByFieldSorted(CardModel,
-        'list', listId, 'list title complete', { createdAt: 1 })
+        'list', listId, 'list title position complete', { createdAt: 1 })
     if (!cards || cards.length === 0) {
         throw Object.assign(new Error('No cards found'), { status: 404 })
     }

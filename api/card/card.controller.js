@@ -36,8 +36,12 @@ async function query(req, res) {
 async function update(req, res) {
     try {
         const { id } = req.params
+        const { list } = req.body
+        const { position } = req.body
         const { complete } = req.body
         const updateData = {};
+        if (list !== undefined) updateData.list = list;
+        if (position !== undefined) updateData.position = position;
         if (complete !== undefined) updateData.complete = complete;
         if (Object.keys(updateData).length === 0) {
             return res.status(400).json({ message: 'No update data provided' });
