@@ -5,7 +5,9 @@ module.exports = {
     signup,
     login,
     logout,
+    getLoggedInAccount,
     get,
+    query,
     remove,
     update
 }
@@ -45,13 +47,13 @@ function logout(req, res) {
     }
 }
 
-async function get(req, res) {
+async function getLoggedInAccount(req, res) {
     try {
         const token = req.cookies.token
         if (!token) {
             return res.status(401).json({ message: 'No token provided' })
         }
-        const account = await accountService.get(token)
+        const account = await accountService.getLoggedInAccount(token)
         if (!account) {
             return res.status(404).json({ message: 'account not found' })
         }
@@ -60,6 +62,33 @@ async function get(req, res) {
         const status = error.status || 500
         return res.status(status).json({ message: error.message || 'account not found' })
     }
+}
+//////
+async function get(req, res) {
+  try{
+      const { id } = req.params
+      const account = await accountService.get(id)
+      if (!account) {
+          return res.status(404).json({ message: 'Account doesnt found' })
+      }
+      return res.json({ account })
+  } catch (error) {
+      const status = error.status || 500
+      return res.status(status).json({ message: error.message || 'Account not found' })
+  }
+}
+
+async function query(req, res) {
+  try{
+    const accounts = await accountService.query()
+    if (!accounts) {
+        return res.status(404).json({ message: 'Did not found any account' })
+    }
+    return res.json({ accounts })
+  } catch (error) {
+      const status = error.status || 500
+      return res.status(status).json({ message: error.message || 'Accounts not found' })
+  }
 }
 
 async function remove(req, res) {

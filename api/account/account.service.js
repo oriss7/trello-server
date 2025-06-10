@@ -5,7 +5,9 @@ const { AccountModel } = require('./account.model');
 module.exports = {
     signup,
     login,
+    getLoggedInAccount,
     get,
+    query,
     remove,
     update
 }
@@ -42,7 +44,7 @@ async function login(email, password) {
     return { account, token }
 }
 
-async function get(token) {
+async function getLoggedInAccount(token) {
     const info = utilitisService.verifyToken(token)
     if (!info) {
         throw Object.assign(new Error('Invalid or expired token'), { status: 401 })
@@ -54,6 +56,24 @@ async function get(token) {
     const account = accountDoc.toObject()
     delete account.password
     return account
+}
+
+async function get(accountId) {
+    const account = await dbService.findById(AccountModel, accountId)
+    if (!account) return null
+    return {
+        _id: account._id,
+        name: account.name,
+        email: account.email
+    }
+}
+
+async function query() {
+  const accounts = await dbService.findAll(AccountModel, 'name email');
+  if (!accounts || accounts.length === 0) {
+    throw Object.assign(new Error('No accounts found'), { status: 404 })
+  }
+  return accounts
 }
 
 async function remove(accountId) {

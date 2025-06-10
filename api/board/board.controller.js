@@ -48,9 +48,15 @@ async function query(req, res) {
 async function update(req, res) {
     try {
         const { id } = req.params
-        const { title } = req.body
+        const { title, newMember, removeMember } = req.body
         const updateData = {};
         if (title !== undefined) updateData.title = title;
+        if (newMember !== undefined) {
+            updateData.$addToSet = { members: newMember };
+        }
+        if (removeMember !== undefined) {
+            updateData.$pull = { members: removeMember };
+        }
         if (Object.keys(updateData).length === 0) {
             return res.status(400).json({ message: 'No update data provided' });
         }
